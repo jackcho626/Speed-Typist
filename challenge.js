@@ -1,19 +1,18 @@
 const timer = document.querySelector("#timer");
-const challengeText = document.querySelector("#challenge-text").value;
+const challenge = document.querySelector("#challenge-text blockquote");
+const challengeText = challenge.innerText;
 const challengeInputBox = document.querySelector("#challenge-input-box textarea");
 // const clearButton = document.querySelector("#clear");
 
 let started = false;
 let timerInterval;
 let time = [0,0,0];
-// let matchedStr;
-// let matchedStrLen = challengeText.innerHTML.length;
+let charPos = 0;
 
 function startChallenge() {
   if (!started) {
     started = true;
     timerInterval = setInterval(runTimer, 10);
-    document.querySelector("#origin-text").style.backgroundColor = "#65CCf3";
   }
 }
 
@@ -38,17 +37,20 @@ function runTimer() {
   }
 }
 
-// highlight correct / incorrect characters
-function matchChar() {
-  let input = challengeInputBox.value;
-  let challengeSubstr = challengeText.substr(0, input.length);
-  if (input === challengeSubstr) {
-    // matchedStr = input;
-    if (input.length === challengeText.length) {
-      clearInterval(timerInterval);
-    }
-  } else {
+// highlight correctly matched characters
+function matchChar(e) {
+  let input = String.fromCharCode(e.which);
+  if (input === challengeText[charPos]) {
+    challenge.innerHTML = "<span class='text-success'>" + challengeText.slice(0, charPos+1)
+      + "</span>" + challengeText.slice(charPos+1);
+    charPos++;
+  } else { // mismatch
     
+  }
+  if (charPos === challengeText.length) {
+    clearInterval(timerInterval);
+    // score / high score message, compare to leaderboard / percentile
+    alert("Good job!");
   }
 }
 
@@ -64,5 +66,5 @@ function clear() {
 
 // Start challenge by typing
 challengeInputBox.addEventListener("keypress", startChallenge, false);
-challengeInputBox.addEventListener("keyup", matchChar, false);
+challengeInputBox.addEventListener("keypress", matchChar, false);
 // clearButton.addEventListener("click", clear, false);
