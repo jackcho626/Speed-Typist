@@ -7,7 +7,9 @@ const challengeInputBox = document.querySelector("#challenge-input-box textarea"
 let started = false;
 let timerInterval;
 let time = [0,0,0];
-let charPos = 0;
+let challengePos = 0;
+let userPos = 0;
+let mismatched = false; // check case where user doesn't delete incorrect chars
 
 function startChallenge() {
   if (!started) {
@@ -39,15 +41,16 @@ function runTimer() {
 
 // highlight correctly matched characters
 function matchChar(e) {
-  let input = String.fromCharCode(e.which);
-  if (input === challengeText[charPos]) {
-    challenge.innerHTML = "<span class='text-success'>" + challengeText.slice(0, charPos+1)
-      + "</span>" + challengeText.slice(charPos+1);
-    charPos++;
-  } else { // mismatch
-    
+  let input = String.fromCharCode(document.all? e.keyCode : e.which); // IE vs Other
+  if (userPos === challengePos && input === challengeText[challengePos]) {
+    console.log('here');
+    challenge.innerHTML = "<span class='text-success'>" + challengeText.slice(0, challengePos + 1)
+      + "</span>" + challengeText.slice(challengePos + 1);
+    challengePos++;
   }
-  if (charPos === challengeText.length) {
+  console.log(input);
+  (document.all? e.keyCode : e.which) === 8? userPos-- : userPos++;
+  if (challengePos === challengeText.length) {
     clearInterval(timerInterval);
     // score / high score message, compare to leaderboard / percentile
     alert("Good job!");
