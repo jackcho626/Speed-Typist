@@ -43,13 +43,12 @@ function runTimer() {
 function matchChar(e) {
   let input = String.fromCharCode(document.all? e.keyCode : e.which); // IE vs Other
   if (userPos === challengePos && input === challengeText[challengePos]) {
-    console.log('here');
     challenge.innerHTML = "<span class='text-success'>" + challengeText.slice(0, challengePos + 1)
       + "</span>" + challengeText.slice(challengePos + 1);
     challengePos++;
   }
-  console.log(input);
-  (document.all? e.keyCode : e.which) === 8? userPos-- : userPos++;
+  // decrement userPos if backspace
+  if ((document.all? e.keyCode : e.which) === 8) userPos--; else userPos++;
   if (challengePos === challengeText.length) {
     clearInterval(timerInterval);
     // score / high score message, compare to leaderboard / percentile
